@@ -1,0 +1,39 @@
+/*Escribir una regla para que el texto de los elementos h1 y h3 sea rojo. Ingrese algún
+texto y pruebe en su navegador.*/
+
+h1,h3 {
+    color: red;
+}
+
+p,li,ol,h2 {
+    color: green; font-family:'Lucida Sans', 
+    'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: 8 px;
+}
+
+#p1 {
+    background-color: yellow; font-size: 18 px
+}
+
+h4 {
+    color: blue;
+}
+
+h5 {
+    color: brown;
+}
+
+h6 {
+    color: #da1e1e;
+}
+/*Definir una CSS donde establezca que el tipo de letra es Verdana y tamaño 8 en los
+párrafos. Definir dos páginas que utilicen esa hoja de estilo de las cuales una debe redefinir
+el tamaño de letra a 10*/
+table {
+    border-style: "width:100%";
+}
+td {
+    border-style: solid;
+    border: 2px;
+    border: solid rgb(40, 58, 218);
+   
+}

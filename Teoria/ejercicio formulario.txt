@@ -1,0 +1,150 @@
+Crear un formulario con:
+Nombre (obligatorio)
+Mensaje (obligatorio, máximo 200 caracteres)
+Email (opcional, pero válido si lo ingresa)
+Dar estilo particular al formulario
+Validar campos
+Mostrar lista con errores creando elementos del DOM
+Cambiar estilo a campos con errores
+Al enviar, si los datos está bien, agregar mensaje a una lista de mensajes, con el siguiente formato:
+Si proveyó el email,
+“<nombre> dice <mensaje>. Contacto: <email>.”
+Si no,
+“<nombre> dice <mensaje>.”
+Limpiar los campos, errores de validación y cambios de estilo
+Hacer foco en el primer input al iniciar el documento y luego de cada envío correcto
+
+NOTA: en el formulario, conviene usar el evento "onsubmit" para llamar a la función que hace la validación. A los efectos del práctico, la función de validación siempre debe devolver false, así el formulario no se envía. En el onsubmit, hacer de esta manera:
+
+<form onsubmit="return validar()">
+
+Es decir, haciendo return de la función para validar que haya definido.
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Formulario de Mensajes</title>
+  <style>
+    .error {
+      border: 2px solid red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Formulario de Mensajes</h1>
+  
+  <form onsubmit="return validar()">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" required>
+    <div id="nombreError" style="display: none; color: red;"></div>
+    
+    <label for="mensaje">Mensaje:</label>
+    <textarea id="mensaje" required maxlength="200"></textarea>
+    <div id="mensajeError" style="display: none; color: red;"></div>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email">
+    <div id="emailError" style="display: none; color: red;"></div>
+    
+    <input type="submit" value="Enviar">
+  </form>
+
+  <h2>Mensajes:</h2>
+  <ul id="mensajes"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
+-----------------------------------------JAVASCRIPT
+
+
+function validar() {
+  // Limpiar mensajes de error y estilos
+  limpiarErrores();
+  
+  // Obtener valores de los campos
+  var nombre = document.getElementById('nombre').value;
+  var mensaje = document.getElementById('mensaje').value;
+  var email = document.getElementById('email').value;
+
+  var errores = [];
+
+  // Validar nombre
+  if (nombre === '') {
+    errores.push('El nombre es obligatorio.');
+    document.getElementById('nombre').classList.add('error');
+    document.getElementById('nombreError').style.display = 'block';
+  }
+
+  // Validar mensaje
+  if (mensaje === '') {
+    errores.push('El mensaje es obligatorio.');
+    document.getElementById('mensaje').classList.add('error');
+    document.getElementById('mensajeError').style.display = 'block';
+  } else if (mensaje.length > 200) {
+    errores.push('El mensaje debe tener como máximo 200 caracteres.');
+    document.getElementById('mensaje').classList.add('error');
+    document.getElementById('mensajeError').style.display = 'block';
+  }
+
+  // Validar email
+  if (email !== '' && !validarEmail(email)) {
+    errores.push('El email ingresado no es válido.');
+    document.getElementById('email').classList.add('error');
+    document.getElementById('emailError').style.display = 'block';
+  }
+
+  // Mostrar errores
+  mostrarErrores(errores);
+
+  if (errores.length > 0) {
+    return false; // Evitar el envío del formulario si hay errores
+  }
+
+  // Agregar mensaje a la lista
+  var mensajeFormato;
+  if (email !== '') {
+    mensajeFormato = nombre + ' dice ' + mensaje + '. Contacto: ' + email + '.';
+  } else {
+    mensajeFormato = nombre + ' dice ' + mensaje + '.';
+  }
+
+  var listaMensajes = document.getElementById('mensajes');
+  var nuevoMensaje = document.createElement('li');
+  nuevoMensaje.textContent = mensajeFormato;
+  listaMensajes.appendChild(nuevoMensaje);
+
+  // Limpiar campos y estilos
+  document.getElementById('nombre').value = '';
+  document.getElementById('mensaje').value = '';
+  document.getElementById('email').value = '';
+  limpiarErrores();
+
+  // Hacer foco en el primer input
+  document.getElementById('nombre').focus();
+
+  return false;
+}
+
+function validarEmail(email) {
+  // Validar el formato del email utilizando una expresión regular
+  var regex = /\S+@\S+\.\S+/;
+  return regex.test(email);
+}
+
+function limpiarErrores() {
+  var campos = ['nombre', 'mensaje', 'email'];
+
+  campos.forEach(function (campo) {
+    document.getElementById(campo).classList.remove('error');
+    document.getElementById(campo + 'Error').style.display = 'none';
+  });
+}
+
+function mostrarErrores(errores) {
+  errores.forEach(function (error) {
+    var errorDiv = document.createElement('div');
+    errorDiv.textContent = error;
+    document.getElementById('mensajes').appendChild(errorDiv);
+  });
+}
